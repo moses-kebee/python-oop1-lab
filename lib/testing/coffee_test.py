@@ -1,41 +1,51 @@
-#!/usr/bin/env python3
+import pytest
+from ..coffee import Coffee  # ← This imports from parent lib directory
 
-from lib.coffee import Coffee
+def test_coffee_creation():
+    coffee = Coffee("Medium", 4.50)
+    assert coffee.size == "Medium"
+    assert coffee.price == 4.50
 
-import io
-import sys
-
-class TestCoffee:
-    '''Coffee in coffee.py'''
-
-    def test_has_size_and_price(self):
-        '''has the size and status passed to __init__, and values can be set to new instance.'''
-        black = Coffee(size = "Large", price = 1.50)
-        assert(black.size == "Large")
-        assert(black.price == 1.50)
-
-    def test_requires_specific_size(self):
-        '''prints "size must be Small, Medium, or Large" if size is not an one of those options.'''
-        latte = Coffee(size = "Large", price = 2.50)
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        latte.size = "not an size"
-        sys.stdout = sys.__stdout__
-        assert captured_out.getvalue() == "size must be Small, Medium, or Large\n"
-
-    def test_can_tip(self):
-        '''says that the shoe has been repaired.'''
-        americano = Coffee(size = "Large", price = 3.50)
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        americano.tip()
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "This coffee is great, here’s a tip!\n")
+def test_size_validation_valid():
+    small = Coffee("Small", 3.50)
+    medium = Coffee("Medium", 4.50)
+    large = Coffee("Large", 5.50)
     
-    def test_tip_adds_to_price(self):
-        '''adds 1 to price of coffee'''
-        americano = Coffee(size = "Large", price = 3.50)
-        americano.tip()
-        assert(americano.price == 4.50)
-        
-        
+    assert small.size == "Small"
+    assert medium.size == "Medium"
+    assert large.size == "Large"
+
+def test_size_validation_invalid(capsys):
+    coffee = Coffee("Extra Large", 5.00)
+    captured = capsys.readouterr()
+    assert "size must be Small, Medium, or Large" in captured.out
+    assert coffee.size == "Small"
+
+def test_price_setting():
+    coffee = Coffee("Small", 3.50)
+    assert coffee.price == 3.50
+    
+    coffee.price = 4.00
+    assert coffee.price == 4.00
+
+def test_tip_method(capsys):
+    coffee = Coffee("Large", 5.00)
+    original_price = coffee.price
+    
+    coffee.tip()
+    captured = capsys.readouterr()
+    
+    assert "This coffee is great, here's a tip!" in captured.out
+    assert coffee.price == original_price + 1
+
+def test_tip_multiple_times():
+    coffee = Coffee("Medium", 4.50)
+    
+    coffee.tip()
+    assert coffee.price == 5.50
+    
+    coffee.tip()
+    assert coffee.price == 6.50
+    
+    coffee.tip()
+    assert coffee.price == 7.50

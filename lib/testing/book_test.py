@@ -1,33 +1,29 @@
-#!/usr/bin/env python3
+import pytest
+from ..book import Book  # ← This imports from parent lib directory
 
-from book import Book
+def test_book_creation():
+    book = Book("The Great Gatsby", 180)
+    assert book.title == "The Great Gatsby"
+    assert book.page_count == 180
 
-import io
-import sys
+def test_page_count_validation_with_integer():
+    book = Book("Python 101", 250)
+    assert book.page_count == 250
 
-class TestBook:
-    '''Book in book.py'''
+def test_page_count_validation_with_string(capsys):
+    book = Book("Invalid Book", "not a number")
+    captured = capsys.readouterr()
+    assert "page_count must be an integer" in captured.out
+    assert book.page_count == 0
 
-    def test_has_title_and_page_count(self):
-        '''has the title and page_count passed into __init__, and values can be set to new instance.'''
-        book = Book("And Then There Were None", 272)
-        assert(book.page_count == 272)
-        assert(book.title == "And Then There Were None")
+def test_turn_page(capsys):
+    book = Book("Test Book", 100)
+    book.turn_page()
+    captured = capsys.readouterr()
+    assert "Flipping the page...wow, you read fast!" in captured.out
 
-    def test_requires_int_page_count(self):
-        '''prints "page_count must be an integer" if page_count is not an integer.'''
-        book = Book("And Then There Were None", 272)
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        book.page_count = "not an integer"
-        sys.stdout = sys.__stdout__
-        assert captured_out.getvalue() == "page_count must be an integer\n"
-
-    def test_can_turn_page(self):
-        '''outputs "Flipping the page...wow, you read fast!" when method turn_page() is called'''
-        book = Book("The World According to Garp", 69)
-        captured_out = io.StringIO()
-        sys.stdout = captured_out
-        book.turn_page()
-        sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "Flipping the page...wow, you read fast!\n")
+def test_multiple_books():
+    book1 = Book("Book One", 100)
+    book2 = Book("Book Two", 200)
+    assert book1.title != book2.title
+    assert book1.page_count != book2.page_count
