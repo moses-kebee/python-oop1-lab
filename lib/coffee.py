@@ -4,7 +4,7 @@ class Coffee:
     VALID_SIZES = ["Small", "Medium", "Large"]
     
     def __init__(self, size, price):
-        """Initialize a Coffee instance."""
+        """Initialize a Coffee instance with size and price."""
         self.size = size
         self.price = price
     
@@ -32,7 +32,7 @@ class Coffee:
         """Set the price."""
         self._price = float(value)
     
-    def tip(self):  
-        """Process a tip for the coffee."""
-        print("This coffee is great, here's a tip!")  
-        self.price += 1  
+    def tip(self):
+        """Process a tip for the coffee - adds 1 to price."""
+        print("This coffee is great, here's a tip!")
+        self.price += 1
