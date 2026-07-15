@@ -34,5 +34,5 @@ class Coffee:
     
     def tip(self):
         """Process a tip for the coffee - adds 1 to price."""
-        print("This coffee is great, here's a tip!")
+        print("This coffee is great, here’s a tip!")
         self.price += 1
