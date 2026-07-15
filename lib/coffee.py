@@ -4,15 +4,18 @@ class Coffee:
     VALID_SIZES = ["Small", "Medium", "Large"]
     
     def __init__(self, size, price):
+        """Initialize a Coffee instance."""
         self.size = size
         self.price = price
     
     @property
     def size(self):
+        """Get the size of the coffee."""
         return self._size
     
     @size.setter
     def size(self, value):
+        """Set the size with validation."""
         if value in self.VALID_SIZES:
             self._size = value
         else:
@@ -21,12 +24,15 @@ class Coffee:
     
     @property
     def price(self):
+        """Get the price of the coffee."""
         return self._price
     
     @price.setter
     def price(self, value):
+        """Set the price."""
         self._price = float(value)
     
-    def tip(self):
-        print("This coffee is great, here's a tip!")
-        self.price += 1
+    def tip(self):  
+        """Process a tip for the coffee."""
+        print("This coffee is great, here's a tip!")  
+        self.price += 1  
